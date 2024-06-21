@@ -21,7 +21,6 @@ public:
     }
 
     const int head, tail;
-
 };
 
 
