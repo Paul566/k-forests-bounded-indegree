@@ -1,6 +1,7 @@
 #include <iostream>
 #include <vector>
 #include <random>
+#include <chrono>
 
 #include "Digraph.h"
 
@@ -45,28 +46,23 @@ void RunTest(int max_vertices, std::mt19937 &generator) {
 int main() {
     std::mt19937 generator(566);
 
+//    auto adj_list = RandomGraph(100, 2000, generator);
+//    Digraph digraph = Digraph(adj_list);
+//
+//    auto start = std::chrono::high_resolution_clock::now();
+//    digraph.GenerateForests(20);
+//    auto stop = std::chrono::high_resolution_clock::now();
+//
+//    double duration = static_cast<double>(std::chrono::duration_cast<std::chrono::microseconds>(
+//        stop - start).count()) / 1'000'000;
+//    std::cout << duration;
+
     for (int i = 0; i < 1000; ++i) {
-        if (i % 1 == 0) {
+        if (i % 10 == 0) {
             std::cout << "i: " << i << std::endl;
         }
-        RunTest(100, generator);
+        RunTest(10, generator);
     }
-
-//    std::vector<std::vector<int>> adj_list(5);
-//    adj_list[0].push_back(4);
-//    adj_list[0].push_back(1);
-//    adj_list[1].push_back(2);
-//    adj_list[2].push_back(0);
-//    adj_list[2].push_back(1);
-//    adj_list[2].push_back(1);
-//    adj_list[2].push_back(3);
-//    adj_list[4].push_back(0);
-//    adj_list[4].push_back(2);
-//
-//    Digraph digraph(adj_list);
-//    digraph.GenerateForests(2);
-//    digraph.PrintGraph();
-//    digraph.Validate();
 
     return 0;
 }

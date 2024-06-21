@@ -315,13 +315,13 @@ std::vector<std::shared_ptr<DirectedEdge>> Digraph::Search(int vertex, int bound
     // returns an augmenting path if it founds one
     // aborts if more than bound edges labelled
     // also updates active/inactive labels
-    // TODO make bound meaningful
 
     if (Indeg(vertex) == num_forests) {
         vertex_active[vertex] = false;
         return {};
     }
 
+    int edges_labelled = 0;
     std::queue<std::shared_ptr<DirectedEdge>> queue;
     for (const auto &edge : adj_list_inv_[vertex]) {
         if (edge->forest == -1) {
@@ -329,12 +329,9 @@ std::vector<std::shared_ptr<DirectedEdge>> Digraph::Search(int vertex, int bound
                 return {edge};
             }
             queue.push(edge);
+            ++edges_labelled;
         }
     }
-
-//    if ((vertex == 2) && (num_forests == 2)) {
-//        std::cout << "2\n";
-//    }
 
     std::vector<std::unordered_set<int>> labelled_vertices(num_forests, {vertex});
     std::vector<int> labelled_roots(num_forests, vertex);
@@ -345,7 +342,7 @@ std::vector<std::shared_ptr<DirectedEdge>> Digraph::Search(int vertex, int bound
 
     int forest_index = 0;
     std::shared_ptr<DirectedEdge> final_edge = nullptr;
-    while (!queue.empty()) {
+    while ((!queue.empty()) && (edges_labelled <= bound)) {
         auto current_edge = queue.front();
         queue.pop();
 
@@ -391,6 +388,7 @@ std::vector<std::shared_ptr<DirectedEdge>> Digraph::Search(int vertex, int bound
             }
             parents[edge] = current_edge;
             queue.push(edge);
+            ++edges_labelled;
 
             for (const auto &next_edge : adj_list_inv_[edge->head]) {
                 if (next_edge->forest != -1) {
@@ -403,6 +401,7 @@ std::vector<std::shared_ptr<DirectedEdge>> Digraph::Search(int vertex, int bound
 
                 parents[next_edge] = edge;
                 queue.push(next_edge);
+                ++edges_labelled;
 
                 if (EdgeIsJoining(next_edge) != -1) {
                     final_edge = next_edge;
